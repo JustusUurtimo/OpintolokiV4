@@ -1,0 +1,277 @@
+package javaOpintoloki;
+
+import java.io.*;
+import java.util.Random;
+
+import fi.jyu.mit.ohj2.Mjonot;
+import fxopintoloki.Tietue;
+
+/**
+ * Opintolokin kurssi joka osaa mm. itse huolehtia Id:eest‰‰n
+ * @author Olli Mehtonen & Justus Uurtimo
+ * @version 24.3.2019
+ */
+public class Kurssi implements Cloneable, Tietue{
+
+	private int oid;
+	private int opintoPisteet;
+	private int sivuPaaAine;
+	private String lisaTiedot = "";
+	private int opintotaso;
+	private String tunnus = "";
+	private static int seuraava = 0;
+	
+	
+	/**
+     * Alustetaan tyhj‰ kurssi
+     */
+	public Kurssi() {
+		
+	}
+	
+	public int getKenttia() {
+		return 6;
+	}
+	
+	public int ekaKentta() {
+		return 1;
+	}
+	
+	 public String anna(int k) {
+	        switch ( k ) {
+	        case 0: return "" + oid;
+	        case 1: return "" + tunnus;
+	        case 2: return "" + opintoPisteet;
+	        case 3: return "" + opintotaso;
+	        case 4: return "" + sivuPaaAine;
+	        case 5: return "" + lisaTiedot;
+	       
+	        default: return "ƒ‰‰liˆ";
+	        }
+	    }
+	
+	
+	/**
+     * Asetetaan jotkin arvot kurssille
+     */
+	public void annaVakio() {
+		int random = (int)(Math.random() * 7 + 1);
+		this.opintoPisteet = random;
+		
+		this.sivuPaaAine = 1;
+		this.lisaTiedot = "oli kivaa";
+		
+		String[] strings = {"TIEP111", "HYVY001", "TIEP185", "ITKP0004", "TIEA211", "MATY010"};
+		int idx = new Random().nextInt(strings.length);
+		String randomi = (strings[idx]);
+		this.tunnus = randomi;
+		
+		this.opintotaso = 1;
+	}
+	
+	public String aseta(int k, String jono) {
+        String tjono = jono.trim();
+        StringBuffer sb = new StringBuffer(tjono);
+        switch ( k ) {
+        case 0:
+            setOid(Mjonot.erota(sb, 'ß', getId()));
+            return null;
+        case 1:
+            tunnus = tjono;
+            return null;
+        case 2:
+            this.opintoPisteet = Integer.parseInt(tjono);
+            return null;
+        case 3:
+            this.opintotaso = Integer.parseInt(tjono);;
+            return null;
+        case 4:
+            this.sivuPaaAine = Integer.parseInt(tjono);;
+            return null;
+        case 5:
+            this.lisaTiedot = tjono;
+            return null;
+        default:
+        	return "heipahei";
+        }
+	}
+	
+	public String getKysymys(int k) {
+        switch ( k ) {
+        case 0: return "id";
+        case 1: return "Tunnus";
+        case 2: return "Opintopisteet";
+        case 3: return "Opintotaso";
+        case 4: return "sivu-/P‰‰aine";
+        case 5: return "lis‰tiedot";
+        default: return "ƒ‰‰liˆ";
+        }
+    }
+	
+	// kopioidaan kurssi muokkausta varten
+	public Kurssi clone() throws CloneNotSupportedException {
+		Kurssi uusi;
+		uusi = (Kurssi) super.clone();
+		return uusi;
+	}
+	
+	
+	/**
+     * Asetetaan id kurssille ja siirryt‰‰n id eteenp‰in
+     * @return kurssin id
+     */
+	public int setOid() {
+		this.oid = seuraava;
+		seuraava++;
+		return this.oid;
+	}
+	
+	public void setOid(int oid) {
+		this.oid = oid;
+		if(this.oid >= seuraava) {
+			seuraava = this.oid + 1;
+		}
+	}
+	
+
+	/**
+	 * Palauttaa kurssin id:een
+	 * @return kurssin id
+	 */
+	public int getId() {
+		return this.oid;
+	}
+	
+	
+	/**
+     * Asetetaan tunnus (nimi) kurssille
+     * @param tunnus kurssin tunnus (esim tiep111) 
+     */
+	public void setTunnus(String tunnus) {
+		this.tunnus = tunnus;
+	}
+	
+
+    /**
+     * @return Kurssin tunnuts (nimi)
+     * @example
+     * <pre name="test">
+	 *  Kurssi k1 = new Kurssi(1,"Tiep111", 3, 2, 2);
+	 * 	k1.getTunnus() === "Tiep111";
+     * </pre>
+     */
+	public String getTunnus() {
+		return this.tunnus;
+	}
+	
+	
+	/**
+     * Asetetaan opintopisteet kursille
+     * @param pisteet opintopisteet jotka kurssille annetaan 
+     */
+	public void setOpintoPisteet(int pisteet) {
+		this.opintoPisteet = pisteet;
+	}
+	
+	
+	 /**
+     * Palauttaa kurssin opintopisteiden m‰‰r‰n
+     * @return opintopisteiden m‰‰r‰
+     */
+	public int getOpintoPisteet() {
+		return this.opintoPisteet;
+	}
+	
+	
+	/**
+     * Asetetaan onko kurssi sivu- vai p‰‰aine
+     * @param aine kurssin aine syvyys 
+     */
+	public void setSivuPaaAine(int aine) {
+		this.sivuPaaAine = aine;
+	}
+	
+	
+	/**
+     * Asetetaan kurssin lis‰tiedot
+     * @param tiedot mahdolliset lis‰tiedot kurssille 
+     */
+	public void setLisaTiedot(String tiedot) {
+		this.lisaTiedot += tiedot + "\n";
+	}
+	
+	
+	/**
+     * Asetetaan opintotaso kursille
+     * @param taso kurssin opintotaso 
+     */
+	public void setOpintotaso(int taso) {
+		this.opintotaso = taso;
+	}
+	
+	
+	 /**
+     * Tulostetaan kurssin tiedot
+     * @param out tietovirta johon tulostetaan
+     */
+	public void tulosta(PrintStream out) {
+		out.println("id: " + oid);
+		out.println("Kurssin nimi: " + tunnus);
+		out.println("Opintopisteet: " + opintoPisteet);
+		out.println("Opintotaso: " + opintotaso);
+		out.println("P‰‰/Sivuaine: " + sivuPaaAine);
+		out.println("Lis‰tiedot: " + lisaTiedot + "\n");
+	}
+	
+	
+	 /**
+     * Tulostetaan kurssin tiedot
+     * @param os tietovirta johon tulostetaan
+     */
+	public void tulosta(OutputStream os) {
+		tulosta(new PrintStream(os));
+	}
+	
+	
+	@Override
+	public String toString() {
+		return "" + oid + "," + 
+					tunnus + "," +
+					opintoPisteet + "," +
+					opintotaso + "," + 
+					sivuPaaAine + "," +
+					lisaTiedot;
+	}
+	
+	public void parse(String rivi) {
+		StringBuffer sb = new StringBuffer(rivi);
+		setOid(Mjonot.erota(sb, ',', getId()));
+		tunnus = Mjonot.erota(sb, ',', tunnus);
+		opintoPisteet = Mjonot.erota(sb, ',', opintoPisteet);
+		opintotaso = Mjonot.erota(sb, ',', opintotaso);
+		sivuPaaAine = Mjonot.erota(sb, ',', sivuPaaAine);
+		lisaTiedot = Mjonot.erota(sb, ',', lisaTiedot);
+		
+	}
+	
+	
+	/**
+	 * Testiohjelma kurssille
+	 * @param args
+	 * 
+	 * <pre name="test">
+	 * Kurssi k1 = new Kurssi(1,"Tiep111", 3, 2, 2);
+	 * k1.getTunnus() === "Tiep111";
+	 * k1.getOpintoPisteet() === 3;
+	 * 
+	 * </pre>
+	 */
+	public static void main(String args[]) {
+		Kurssi k1 = new Kurssi();
+		k1.setOid();
+		k1.annaVakio();
+		k1.tulosta(System.out);
+		k1.setLisaTiedot("Olipa hauska kurssi!");
+		k1.tulosta(System.out);
+	}
+}

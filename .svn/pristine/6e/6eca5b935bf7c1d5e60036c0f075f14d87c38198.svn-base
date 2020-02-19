@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import fi.jyu.mit.fxgui.ListChooser?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="500.0" maxWidth="500.0" minHeight="500.0" minWidth="500.0" prefHeight="500.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxopintoloki.opintolokiGUIController">
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="Tiedosto">
+            <items>
+                  <MenuItem fx:id="TallennaM" mnemonicParsing="false" onAction="#tallenna" text="Tallenna" />
+                  <MenuItem fx:id="Tulosta" mnemonicParsing="false" onAction="#tulosta" text="Tulosta" />
+                  <MenuItem fx:id="KirjauduUlos" mnemonicParsing="false" onAction="#kirjauduUlos" text="Kirjaudu ulos" />
+              <MenuItem fx:id="Lopeta" mnemonicParsing="false" onAction="#sulje" text="Lopeta" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Muokkaa">
+            <items>
+                  <MenuItem fx:id="LisaaUusiKurssi" mnemonicParsing="false" onAction="#lisaaKurssi" text="Lisää kurssi..." />
+              <MenuItem fx:id="PoistaKurssi" mnemonicParsing="false" onAction="#poista" text="Poista Kurssi..." />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Apua">
+            <items>
+                  <MenuItem fx:id="Apua" mnemonicParsing="false" onAction="#tiedot" text="Apua" />
+              <MenuItem fx:id="Tiedot" mnemonicParsing="false" onAction="#tiedot" text="Tietoja" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+   <left>
+      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label text="Nykyiset">
+               <VBox.margin>
+                  <Insets left="25.0" />
+               </VBox.margin>
+            </Label>
+            <ListChooser fx:id="chooserKurssi" onMouseClicked="#tulostaPaaIkkunaan" rivit="">
+               <VBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" />
+               </VBox.margin>
+            </ListChooser>
+            <Label text="Suoritetut">
+               <VBox.margin>
+                  <Insets left="20.0" />
+               </VBox.margin>
+            </Label>
+            <ListChooser fx:id="chooserSuoritus" rivit="">
+               <VBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" />
+               </VBox.margin>
+            </ListChooser>
+         </children>
+      </VBox>
+   </left>
+   <center>
+      <ScrollPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <content>
+          <AnchorPane>
+               <children>
+                  <Label text="Kurssin tiedot">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                     <padding>
+                        <Insets left="50.0" />
+                     </padding>
+                  </Label>
+                  <VBox>
+                     <children>
+                        <GridPane fx:id="gridKurssi">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <padding>
+                              <Insets top="50.0" />
+                           </padding>
+                           <children>
+                              <Label text="Label" />
+                              <Label text="Label" GridPane.rowIndex="1" />
+                              <Label text="Label" GridPane.rowIndex="2" />
+                              <Label text="Label" GridPane.rowIndex="3" />
+                              <Label text="Label" GridPane.rowIndex="4" />
+                              <TextField GridPane.columnIndex="1" />
+                              <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <TextField GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              <TextField GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                              <Label text="Label" GridPane.rowIndex="5" />
+                              <TextField GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                           </children>
+                        </GridPane>
+                        <GridPane fx:id="gridSuoritus">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <padding>
+                              <Insets top="20.0" />
+                           </padding>
+                           <children>
+                              <Label text="Label" />
+                              <Label text="Label" GridPane.rowIndex="1" />
+                              <Label text="Label" GridPane.rowIndex="2" />
+                              <TextField GridPane.columnIndex="1" />
+                              <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                           </children>
+                        </GridPane>
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+        </content>
+      </ScrollPane>
+   </center>
+   <right>
+      <VBox BorderPane.alignment="CENTER">
+         <children>
+            <Label text="Opintosuoritukset">
+               <font>
+                  <Font size="16.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="10.0" />
+               </VBox.margin>
+            </Label>
+            <GridPane fx:id="gridOpintoKurssit">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label text="Kursseja yhteensä" />
+                  <Label text="Läpäisty" GridPane.rowIndex="1" />
+                  <Label text="Hylätty" GridPane.rowIndex="2" />
+                  <Label text="Kesken" GridPane.rowIndex="3" />
+                  <TextField fx:id="lapi" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <TextField fx:id="hyl" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <TextField fx:id="kesken" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <TextField fx:id="kurssejaYht" GridPane.columnIndex="1" />
+               </children>
+            </GridPane>
+            <Label text="Opintopisteet">
+               <font>
+                  <Font size="16.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="10.0" />
+               </VBox.margin>
+            </Label>
+            <GridPane fx:id="gridOpintoPisteet">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label text="Ansaittu" />
+                  <Label text="Tavoite" GridPane.rowIndex="1" />
+                  <TextField fx:id="opAnsaittu" GridPane.columnIndex="1" />
+                  <TextField fx:id="opTavoite" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+               </children>
+            </GridPane>
+         </children>
+      </VBox>
+   </right>
+   <bottom>
+      <BorderPane BorderPane.alignment="CENTER">
+         <left>
+            <HBox BorderPane.alignment="CENTER">
+               <children>
+                  <Button fx:id="LisaaKurssi" mnemonicParsing="false" onMouseClicked="#lisaaKurssi" text="Lisää kurssi">
+                     <HBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="Poista" mnemonicParsing="false" onMouseClicked="#poista" text="Poista">
+                     <HBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="LisaaSuoritus" mnemonicParsing="false" onMouseClicked="#lisaaSuoritus" text="Lisää suoritus">
+                     <HBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="MuokkaaKurssi" mnemonicParsing="false" onMouseClicked="#muokkaaKurssi" text="Muokkaa">
+                     <HBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+         </left>
+         <right>
+            <HBox BorderPane.alignment="CENTER">
+               <children>
+                  <Button fx:id="Tallenna" mnemonicParsing="false" onMouseClicked="#tallenna" prefHeight="26.0" prefWidth="99.0" text="Tallenna">
+                     <HBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+         </right>
+      </BorderPane>
+   </bottom>
+</BorderPane>

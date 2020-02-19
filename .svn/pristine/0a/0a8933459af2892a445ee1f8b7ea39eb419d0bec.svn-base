@@ -1,0 +1,297 @@
+package javaOpintoloki;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+/**
+ * Opintolokin kurssit joka osaa mm. lis‰t‰ uuden kurssin
+ * @author Olli Mehtonen & Justus Uurtimo
+ * @version 4.4.2019
+ */
+public class Kurssit {
+	
+	private static final int MaxKurssit = 15;
+	private Kurssi[] kurssit = new Kurssi[MaxKurssit];
+	private String tiedostonPerusNimi = "kurssit";
+	private String kokoNimi = "";
+	private Boolean muutettu = false;
+	private int lkm = 0;
+	
+	
+	/**
+	 * Alustaa kurssit
+	 */
+	public Kurssit() {
+		
+	}
+	
+	
+   /**
+	* Lis‰‰ uuden j‰senen tietorakenteeseen.  Ottaa j‰senen omistukseensa.
+	* @param kurssi lis‰t‰‰v‰n j‰senen viite.  Huom tietorakenne muuttuu omistajaksi
+	* @throws SailoException jos tietorakenne on jo t‰ynn‰
+	* @example
+	* <pre name="test">
+	* #THROWS SailoException 
+	* Kurssit kurssit = new Kurssit();
+	* Kurssi k1 = new Kurssi(1,"Tiep111", 3, 2, 2);
+	* Kurssi k2 = new Kurssi(1,"Tiep113", 3, 2, 2);
+	* kurssit.getLkm() === 0;
+	* kurssit.lisaa(k1); kurssit.getLkm() === 1;
+	* kurssit.lisaa(k2); kurssit.getLkm() === 2;
+	* kurssit.lisaa(k1); kurssit.getLkm() === 3;
+	* kurssit.hae(0) === k1;
+	* kurssit.hae(1) === k2;
+	* kurssit.hae(2) === k1;
+	* kurssit.hae(1) == k1 === false;
+	* kurssit.hae(1) == k2 === true;
+	* kurssit.hae(3) === k1; #THROWS IndexOutOfBoundsException 
+	* kurssit.lisaa(k1); kurssit.getLkm() === 4;
+	* kurssit.lisaa(k1); kurssit.getLkm() === 5;
+	* kurssit.lisaa(k1);  #THROWS SailoException
+	* </pre>
+	*/
+	public void lisaa(Kurssi kurssi) throws SailoException {
+		if(lkm >= kurssit.length) throw new SailoException("liikaa alkioita");
+		kurssit[lkm] = kurssi;
+		lkm++;
+		muutettu = true;
+	}
+	
+	
+	/**
+     * Palauttaa viitteen i:teen kurssiin.
+     * @param i monennenko kurssin viite halutaan
+     * @return viite kurssiin, jonka indeksi on i
+     * @throws IndexOutOfBoundsException jos i ei ole sallitulla alueella  
+     */
+	public Kurssi hae(int i) throws IndexOutOfBoundsException {
+		if(i < 0 || lkm <= i) {
+			throw new IndexOutOfBoundsException("Laiton indeksi: " + i);
+		}
+		return kurssit[i];
+	}
+	
+	
+	public void setTiedostonPerusNimi(String nimi) {
+		this.tiedostonPerusNimi = nimi;
+	}
+	
+	public String getTiedostonNimi() {
+		return this.tiedostonPerusNimi + ".dat";
+	}
+	
+	public String getTiedostonPerusNimi() {
+		return this.tiedostonPerusNimi;
+	}
+	
+	public String getBakNimi() {
+		return this.tiedostonPerusNimi + ".bak";
+	}
+	
+	public String getKokoNimi() {
+		return this.kokoNimi;
+	}
+	
+	 public class JasenetIterator implements Iterator<Kurssi> {
+	        private int kohdalla = 0;
+
+
+	        /**
+	         * Onko olemassa viel‰ seuraavaa j‰sent‰
+	         * @see java.util.Iterator#hasNext()
+	         * @return true jos on viel‰ j‰seni‰
+	         */
+	        @Override
+	        public boolean hasNext() {
+	            return kohdalla < getLkm();
+	        }
+
+
+	        /**
+	         * Annetaan seuraava j‰sen
+	         * @return seuraava j‰sen
+	         * @throws NoSuchElementException jos seuraava kurssita ei en‰‰ ole
+	         * @see java.util.Iterator#next()
+	         */
+	        @Override
+	        public Kurssi next() throws NoSuchElementException {
+	            if ( !hasNext() ) throw new NoSuchElementException("Ei oo");
+	            return hae(kohdalla++);
+	        }
+	    }
+
+
+	    /**
+	     * Palautetaan iteraattori j‰senist‰‰n.
+	     * @return j‰sen iteraattori
+	     */
+	    public Iterator<Kurssi> iterator() {
+	        return new JasenetIterator();
+	    }
+	
+	
+	/**
+     * Lukee kurssit tiedostosta.  Kesken.
+     * @param hakemisto tiedoston hakemisto
+     * @throws SailoException jos lukeminen ep‰onnistuu
+     */
+	public void lueTiedostosta(String tiedosto) throws SailoException{
+		setTiedostonPerusNimi(tiedosto);
+		try( BufferedReader fi = new BufferedReader(new FileReader (getTiedostonNimi()))) {
+			kokoNimi = fi.readLine();
+			if(kokoNimi == null) {
+				throw new SailoException("Kurssin nimi puuttuu, tai muu virhe");
+				
+			}
+			String rivi = fi.readLine();
+			if(rivi == null) {
+				throw new SailoException("Rivi‰ ei ole");
+			}
+			
+			while((rivi = fi.readLine()) != null) {
+				rivi = rivi.trim();
+				if("".equals(rivi) || rivi.charAt(0) == ';') {
+					continue;
+				}
+				Kurssi kurssi = new Kurssi();
+				kurssi.parse(rivi);
+				lisaa(kurssi);
+			}
+			muutettu = false;
+			
+		} catch (FileNotFoundException e) {
+			throw new SailoException(tiedosto + " ei aukea!");
+		} catch (IOException e) {
+			throw new SailoException("Onglemia" + tiedosto + e.getMessage());
+		}
+	}
+	
+	public void lueTiedostosta() throws SailoException  {
+		lueTiedostosta(getTiedostonPerusNimi());
+	}
+	
+	
+	public void korvaaTaiLisaa(Kurssi kurssi) throws SailoException {
+		int oid = kurssi.getId();
+		for(int i = 0; i < lkm; i++) {
+			if(kurssit[i].getId() == oid) {
+				kurssit[i] = kurssi;
+				muutettu = true;
+				return;
+			}
+		}
+		lisaa(kurssi);
+	}
+	
+	
+	/**
+     * Tallentaa kurssit tiedostoon.  Kesken.
+     * @throws SailoException jos talletus ep‰onnistuu
+     */
+	public void tallenna() throws SailoException {
+		if(!muutettu) {
+			return;
+		}
+		File fbak = new File(getBakNimi());
+		File ftied = new File(getTiedostonNimi());
+		fbak.delete();
+		ftied.renameTo(fbak);
+		
+		try(PrintWriter fo = new PrintWriter(new FileWriter(ftied.getCanonicalPath()))) {
+			fo.println(getKokoNimi());
+			fo.println(kurssit.length);
+			for(Kurssi kurssi: this.kurssit) {
+				if(kurssi == null) {
+					break;
+				}
+				System.out.println(kurssi.toString());
+				fo.println(kurssi.toString());
+			}
+			
+		} catch (FileNotFoundException e) {
+			throw new SailoException(ftied.getName() + " ei aukea!");
+		} catch (IOException e) {
+			throw new SailoException("Onglemia" + ftied.getName() + e.getMessage());
+		}
+		
+		muutettu = false;
+	}
+	
+	
+	public Collection<Kurssi> etsi(String hakuehto, int k) {
+		Collection<Kurssi> loydetyt = new ArrayList<Kurssi>();
+		for(Kurssi kurssi : this.kurssit) {
+			loydetyt.add(kurssi);
+			
+		}
+		return loydetyt;
+	}
+	
+	
+    /**
+     * Palauttaa kerhon j‰senten lukum‰‰r‰n
+     * @return j‰senten lukum‰‰r‰
+     */
+	public int getLkm() {
+		return lkm;
+	}
+	
+	
+	
+	public int etsiId(int id) { 
+        for (int i = 0; i < lkm; i++) 
+            if (id == kurssit[i].getId()) return i; 
+        return -1; 
+    } 
+	
+	
+	public int poista(int id) { 
+        int ind = etsiId(id); 
+        if (ind < 0) return 0; 
+        lkm--; 
+        for (int i = ind; i < lkm; i++) 
+            kurssit[i] = kurssit[i + 1]; 
+        kurssit[lkm] = null; 
+        muutettu = true; 
+        return 1; 
+    } 
+	
+	
+	/**
+     * Testiohjelma j‰senistˆlle
+     * @param args ei k‰ytˆss‰
+     */
+	public static void main(String args[]) {
+		Kurssi k1 = new Kurssi();
+		k1.setOid();
+		k1.annaVakio();
+		Kurssi k2 = new Kurssi();
+		k2.setOid();
+		k2.annaVakio();
+		
+		Kurssit kurssit = new Kurssit();
+		try {
+			kurssit.lisaa(k1);
+			kurssit.lisaa(k2);
+			
+			for(int i = 0; i < kurssit.getLkm(); i++) {
+				int x = i+1;
+				Kurssi kurssi = kurssit.hae(i);
+				System.out.println("Kurssin nro: " + x);
+				kurssi.tulosta(System.out);
+			}
+		} catch (SailoException ex) {
+			System.out.println(ex.getMessage());
+		}	
+	}
+}

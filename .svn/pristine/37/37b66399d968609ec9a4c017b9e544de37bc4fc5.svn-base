@@ -1,0 +1,209 @@
+package javaOpintoloki;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.*;
+
+
+/**
+ * Kurssin suoritukset jotka osaavat lisätä uuden suorituksen
+ * @version 4.4.2019
+ * @author Olli Mehtonen & Justus Uurtimo
+ */
+
+
+public class Suoritukset implements Iterable<Suoritus> {
+
+	private final Collection<Suoritus> suoritukset = new ArrayList<Suoritus>();
+	private boolean muutettu = false;
+	private String tiedostonPerusNimi = "suoritukset";
+	
+	/**
+	 * Suoritusten alustus
+	 */
+	public Suoritukset() {
+		
+	}
+	
+	
+	/**
+	 * Suorituksen lisääminen
+	 * @param suor lisättävä suoritus
+	 */
+	public void lisaaSuoritus(Suoritus suor) {
+		suoritukset.add(suor);
+		muutettu = true;
+	}
+	
+	
+	public void setTiedostonPerusNimi(String nimi) {
+		this.tiedostonPerusNimi = nimi;
+	}
+	
+	public String getTiedostonNimi() {
+		return this.tiedostonPerusNimi + ".dat";
+	}
+	
+	public String getTiedostonPerusNimi() {
+		return this.tiedostonPerusNimi;
+	}
+	
+	public String getBakNimi() {
+		return this.tiedostonPerusNimi + ".bak";
+	}
+	
+	
+	/**
+     * Lukee tiedostosta.  
+     * TODO Kesken.
+     * @param hakemisto tiedoston hakemisto
+     * @throws SailoException jos lukeminen epäonnistuu
+     */
+	public void lueTiedostosta(String tiedosto) throws SailoException{
+		setTiedostonPerusNimi(tiedosto);
+		try( BufferedReader fi = new BufferedReader(new FileReader (getTiedostonNimi()))) {
+			
+			String rivi;
+			while((rivi = fi.readLine()) != null) {
+				rivi = rivi.trim();
+				if("".equals(rivi) || rivi.charAt(0) == ';') {
+					continue;
+				}
+				Suoritus suoritus = new Suoritus();
+				suoritus.parse(rivi);
+				lisaaSuoritus(suoritus);
+			}
+			muutettu = false;
+			
+		} catch (FileNotFoundException e) {
+			throw new SailoException(tiedosto + " ei aukea!");
+		} catch (IOException e) {
+			throw new SailoException("Onglemia" + tiedosto + e.getMessage());
+		}
+	}
+	
+	public void lueTiedostosta() throws SailoException  {
+		lueTiedostosta(getTiedostonPerusNimi());
+	}
+	
+	
+	/**
+     * Tallentaa suoritust tiedostoon.
+     * @throws SailoException jos talletus epäonnistuu
+     */
+	public void tallenna() throws SailoException {
+		if(!muutettu) {
+			return;
+		}
+		File fbak = new File(getBakNimi());
+		File ftied = new File(getTiedostonNimi());
+		fbak.delete();
+		ftied.renameTo(fbak);
+		
+		
+		try(PrintWriter fo = new PrintWriter(new FileWriter(ftied.getCanonicalPath()))) {
+			for(Suoritus suoritus: this.suoritukset) {
+				fo.println(suoritus.toString());
+			}
+			
+		} catch (FileNotFoundException e) {
+			throw new SailoException(ftied.getName() + " ei aukea!");
+		} catch (IOException e) {
+			throw new SailoException("Onglemia" + ftied.getName() + e.getMessage());
+		}
+		
+		muutettu = false;
+	}
+	
+	
+	
+	
+	
+	/**
+     * Tallentaa jäsenistön tiedostoon.  
+     * @return suoritusten lukumäärä
+     */
+	public int getLkm() {
+		return suoritukset.size();
+	}
+	
+	
+	/**
+     * Iteraattori kaikkien harrastusten läpikäymiseen
+     * @return 
+	 */
+	@Override
+	public Iterator<Suoritus> iterator() {
+		return suoritukset.iterator();
+	}
+	
+	
+	/**
+     * Haetaan kaikki suoritusn suoritukset
+	 * @param id suoritusn id jolle harrastuksia haetaan
+     * @return tietorakenne jossa viiteet löydetteyihin suorituksiin
+     * 
+     * <pre name="test">
+     * #import java.util.*;
+     * 
+     *   Suoritukset suoritukset = new Suoritukset();
+     *   Suoritus s1 = new Suoritus(1, "1.1.2019", 4);
+     *   Suoritus s2 = new Suoritus(1, "2.2.2019", 5);
+     *   Suoritus s3 = new Suoritus(2, "2.3.2019", 1);
+     *   
+     *   suoritukset.lisaaSuoritus(s1);
+     *   suoritukset.lisaaSuoritus(s2);
+     *   suoritukset.lisaaSuoritus(s3);
+     *   List <Suoritus> lukumaara;
+     * 	 lukumaara = suoritukset.getSuoritukset(1);
+     * 	 lukumaara.size() === 2;
+     * 	 lukumaara = suoritukset.getSuoritukset(2);
+     * 	 lukumaara.size() === 1;
+     * 
+     * 		 
+     * </pre>
+	 */
+	public List<Suoritus> getSuoritukset(int oid) {
+		List<Suoritus> loydetyt = new ArrayList<Suoritus>();
+		for(Suoritus suoritus : suoritukset) {
+			if(suoritus.getId() == oid) {
+				loydetyt.add(suoritus);
+			}
+		}
+		return loydetyt;
+	}
+	
+	
+	
+	
+	/**
+     * Testiohjelma harrastuksille
+     * @param args ei käytössä 
+     */
+    public static void main(String[] args) {
+        Suoritukset suoritukset = new Suoritukset();
+        Suoritus s1 = new Suoritus(1);
+        s1.annaVakio(1);
+        Suoritus s2 = new Suoritus(2);
+        s2.annaVakio(2);
+        Suoritus s3 = new Suoritus(3);
+        s3.annaVakio(3);
+        
+        suoritukset.lisaaSuoritus(s1);
+        suoritukset.lisaaSuoritus(s2);
+        suoritukset.lisaaSuoritus(s3);
+        
+        
+        List<Suoritus> suorituksetLista = suoritukset.getSuoritukset(1);
+        
+        for(Suoritus suor : suorituksetLista) {
+        	System.out.println(suor.getId() + " ");
+        	suor.tulosta(System.out);
+        }
+    }
+}

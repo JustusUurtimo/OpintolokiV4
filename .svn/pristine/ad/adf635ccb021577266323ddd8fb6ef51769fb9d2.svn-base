@@ -1,0 +1,79 @@
+=----------------------------------------
+= Ohjelmointi 2, 2019, vaihe 5
+=----------------------------------------
+
+
+
+= <h3>Linkki TIMin suunnitelmasivulle</h3>
+
+https://tim.jyu.fi/view/kurssit/tie/ohj2/2019k/ht/opintoloki = Suunnitelma TIMissä
+
+https://www.mit.jyu.fi/demowww/ohj2/ht19/opintoloki/ = Työ vaiheittain
+
+
+= <h3>Työ versionhallinassa</h3>
+
+https://svn.cc.jyu.fi/srv/svn/ohj2ht/k2019/opintoloki/trunk = Linkki versionhallintaan
+
+
+= <h3>Esisuunnittelu paintilla</h3>
+
+kuvat/alkuK.png = Ohjelman avaaminen (paint)
+kuvat/menuK.png = Ohjelman pääikkuna (paint)
+
+
+= <h3>Esisuunnittelu scenebuilderilla</h3>
+
+kuvat/Kirjautuminen.png = Ohjelman avaaminen (scenebuilder)
+kuvat/KirjautuminenEpaonnistui.png = Kun kirjautuminen epäonnistuu (scenebuilder)
+kuvat/PaaIkkuna.png = Ohjelman pääikkuna kirjautumisen jälkeen (scenebuilder)
+kuvat/KurssienLisaaminen.png = Kurssien lisäämineen ohjelmaan (scenebuilder)
+kuvat/KurssienMuokkaaminen.png = Lisättyjen kurssien muokkaaminen (scenebuilder)
+kuvat/KurssienPoisto.png = Lisätyn kurssin poistaminen (scenebuilder)
+kuvat/TietojaIkkuna.png = Tietoja ikkuna (scenebuilder)
+
+
+= <h3>Ajettava ohjelma</h3>
+
+opintoLoki.jar = ajettava ohjelma, lataa ja aja
+
+
+= <h3>Tietorakenne ja luokat</h3>
+https://tim.jyu.fi/view/kurssit/tie/ohj2/2019k/ht/opintoloki#crc-kortit = CRC-kortit TIMissä
+kuvat/vaihe4.png = Relaatiomalli tietorakenteesta (tehty draw.io:lla)
+
+
+= <h3>Käyttöliittymän ulkoasu JavaFX:llä</h3>
+
+src/fxopintoloki/OpintolokiMain.java = ohjelman käynnistävä pääluokka
+src/fxopintoloki/opintolokiGUIView.fxml = ohjelman varsinainen käyttöliittymä
+src/fxopintoloki/opintolokiGUIController.java = ohjain joka käsittelee käyttöliittymästä tulevat tapahtumat
+src/fxopintoloki/DialogiGUIController.java = kontrolleri dialogeille
+src/fxopintoloki/TulostaController.java = kontrolleri tulostusta varten
+src/fxopintoloki/fxopintoloki.css = tyylitiedosto
+
+src/fxopintoloki/opintolokiKirjautuminen.fxml = Kirjautumisikkuna
+src/fxopintoloki/opintolokiKirjautuminenEpaonnistui.fxml = Kirjautuminen epäonnistui
+src/fxopintoloki/opintolokiKurssienLisaaminen.fxml = Kurssien lisäämisen ikkuna
+src/fxopintoloki/opintolokiKurssinPoisto.fxml = Kurssien poistamisen ikkuna
+src/fxopintoloki/opintolokiPaaIkkuna.fxml = Ohjelman pääikkuna
+src/fxopintoloki/opintolokiSuorituksenLisaaminenEpaonnistui.fxml = Kun kurssisuorituksen lisääminen epäonnistuu
+src/fxopintoloki/opintolokiSuoritustenLisaaminen.fxml = Ikkuna suorituksen lisäämiseksi
+src/fxopintoloki/opintolokiTiedot.fxml = Ikkuna tiedoista
+src/fxopintoloki/opintolokiTulosta.fxml = Ikkuna tulostettavista tiedoista
+
+
+=<h3>Tietorakenteiden javaluokat </h3>
+
+src/fxopintoloki/Kurssi.java =  Opintolokin kurssi joka osaa mm. itse huolehtia Id:eestään
+src/fxopintoloki/Kurssit.java = Opintolokin kurssit joka osaa mm. lisätä uuden kurssin 
+src/fxopintoloki/Suoritus.java = Kurssin suoritus joka osaa mm. itse huolehtia Id:eestään
+src/fxopintoloki/Suoritukset.java = Kurssin suoritukset jotka osaavat lisätä uuden suorituksen
+src/fxopintoloki/Opintoloki.java =  Opintoloki luokka, huolehtii kurssien ja suorituksien kommunikoinnista, yhdistää ne kokonaisuudeksi
+src/fxopintoloki/SailoException.java = Huolehtii säilömisen aiheuttamista virheistä
+
+
+= <h3>Muita tiedostoja</h3>
+
+.classpath = Eclipsen luokkapolku
+.project = Eclipsen projekti

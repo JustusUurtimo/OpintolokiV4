@@ -1,0 +1,213 @@
+package javaOpintoloki;
+
+import java.io.File;
+import java.util.Collection;
+import java.util.List;
+
+/**
+ * Opintoloki luokka, huolehtii kurssien ja suorituksien kommunikoinnista, yhdist‰‰ ne kokonaisuudeksi
+ * @author Olli Mehtonen & Justus Uurtimo
+ * @version 4.4.2019
+ */
+
+public class Opintoloki {
+	private  Kurssit kurssit = new Kurssit();
+	private  Suoritukset suoritukset = new Suoritukset();
+	
+	
+	/**
+     * Palautaa kurssien lukum‰‰r‰n
+     * @return kurssien m‰‰r‰n
+     */
+	public int KurssienMaara() {
+		return kurssit.getLkm();
+	}
+	
+	/**
+     * Poistetaan kurssi/suoritus
+     * @param nro viitenumero, jonka mukaan poistetaan
+     */
+	public int poista(int nro) {
+		return 0;
+	}
+	
+	
+	
+	
+	public void korvaaTaiLisaa(Kurssi kurssi) throws SailoException {
+		kurssit.korvaaTaiLisaa(kurssi);
+	}
+	
+	
+	/**
+     * Lis‰‰ uuden j‰senen tietorakenteeseen.  Ottaa j‰senen omistukseensa.
+     * @param kurssi lis‰t‰‰v‰n j‰senen viite.  Huom tietorakenne muuttuu omistajaksi
+     * @throws SailoException jos tietorakenne on jo t‰ynn‰
+     * @example
+     * <pre name="test">
+     * #THROWS SailoException 
+     * Kurssit kurssit = new Kurssit();
+     * Kurssi k1 = new Kurssi(1,"Tiep111", 3, 2, 2);
+     * Kurssi k2 = new Kurssi(1,"Tiep113", 3, 2, 2);
+     * kurssit.getLkm() === 0;
+     * kurssit.lisaa(k1); kurssit.getLkm() === 1;
+     * kurssit.lisaa(k2); kurssit.getLkm() === 2;
+     * kurssit.lisaa(k1); kurssit.getLkm() === 3;
+     * kurssit.hae(0) === k1;
+     * kurssit.hae(1) === k2;
+     * kurssit.hae(2) === k1;
+     * kurssit.hae(1) == k1 === false;
+     * kurssit.hae(1) == k2 === true;
+     * kurssit.hae(3) === k1; #THROWS IndexOutOfBoundsException 
+     * kurssit.lisaa(k1); kurssit.getLkm() === 4;
+     * kurssit.lisaa(k1); kurssit.getLkm() === 5;
+     * kurssit.lisaa(k1);  #THROWS SailoException
+     * </pre>
+     */
+	public void lisaa(Kurssi kurssi) throws SailoException {
+		kurssit.lisaa(kurssi);
+	}
+	
+	
+	/**
+     * List‰‰n uusi suoritus kurssille
+     * @param suoritus lis‰tt‰v‰ suoritus 
+     */
+	public void lisaa(Suoritus suoritus) {
+		suoritukset.lisaaSuoritus(suoritus);
+	}
+	
+	
+	/**
+     * Haetaan id:n kurssi
+     * @param id monesko kurssi haetaan 
+     * @return viite id:een kurssiin
+     * @throws IndexOutOfBoundsException jos id v‰‰rin
+     */
+	public Kurssi haeKurssi(int id) throws IndexOutOfBoundsException {
+		return kurssit.hae(id);
+	}
+	
+	
+	
+	/**
+     * Haetaan kurssin suoritus/suoritukset
+     * @param kurssi mink‰ suoritukset haetaan 
+     * @return suoritus/suortitukset
+     */
+	public List<Suoritus> haeSuoritukset(Kurssi kurssi) {
+		return suoritukset.getSuoritukset(kurssi.getId());
+	}
+	
+	
+	public void setTiedosto(String nimi) {
+		File dir = new File(nimi);
+		dir.mkdir();
+		String hakemistonNimi = "";
+		if(!nimi.isEmpty()) {
+			hakemistonNimi = nimi + "/";
+		}
+		kurssit.setTiedostonPerusNimi(hakemistonNimi + "kurssit");
+		suoritukset.setTiedostonPerusNimi(hakemistonNimi + "suoritukset");
+		
+	}
+	
+	/**
+     * Lukee opintolokin tiedot tiedostosta
+     * @param nimi jota k‰yte‰‰n lukemisessa
+     * @throws SailoException jos lukeminen ep‰onnistuu
+     */
+	public void lueTiedostosta(String nimi) throws SailoException {
+		kurssit = new Kurssit();
+		suoritukset = new Suoritukset();
+		
+		setTiedosto(nimi);
+		kurssit.lueTiedostosta();
+		suoritukset.lueTiedostosta();
+	}
+	
+	
+	 /**
+     * Tallentaa opintolokin tiedot tiedostoon
+     * @throws SailoException jos tallentamisessa ongelmia
+     */
+	public void tallenna() throws SailoException {
+		String virhe = "";
+		try {
+			kurssit.tallenna();
+		} catch(SailoException e) {
+			virhe = e.getMessage();
+		}
+		
+		try {
+			suoritukset.tallenna();
+		} catch(SailoException e) {
+			virhe += e.getMessage();
+		}
+		
+		if(!"".equals(virhe)) {
+			throw new SailoException(virhe);
+		}
+	}
+	
+	public Collection<Kurssi> etsi(String hakuehto, int k) {
+		return kurssit.etsi(hakuehto, k);
+	}
+	
+	
+	  public int poista(Kurssi kurssi) {
+	        if ( kurssi == null ) return 0;
+	        int ret = kurssit.poista(kurssi.getId()); 
+	        suoritukset.poistaKurssinSuoritukset(kurssi.getId());
+	        return ret; 
+	    }
+	
+	/**
+     * Testiohjelma kerhosta
+     * @param args ei k‰ytˆss‰
+     */
+	public static void main(String args[]) {
+        Opintoloki opintoloki = new Opintoloki();
+
+        try {
+            // opintoloki.lueTiedostosta("opintoloki");
+
+            Kurssi k1 = new Kurssi(), k2 = new Kurssi();
+            k1.setOid();
+            k1.annaVakio();
+            k2.setOid();
+            k2.annaVakio();
+            
+
+            opintoloki.lisaa(k1);
+            opintoloki.lisaa(k2);
+            int id1 = k1.getId();
+            int id2 = k2.getId();
+            Suoritus Tiep111 = new Suoritus(); 
+            Tiep111.annaVakio(id1);
+            opintoloki.lisaa(Tiep111);
+            
+            Suoritus Tiep112 = new Suoritus(); 
+            Tiep112.annaVakio(id1);
+            opintoloki.lisaa(Tiep112);
+            
+            Suoritus Tiep113 = new Suoritus(); 
+            Tiep113.annaVakio(id2);
+            opintoloki.lisaa(Tiep113);
+
+            System.out.println("============= Opintolokin testi =================");
+
+            for (int i = 0; i < opintoloki.KurssienMaara(); i++) {
+                Kurssi kurssi = opintoloki.haeKurssi(i);
+                System.out.println("Kurssi paikassa: " + i);
+                kurssi.tulosta(System.out);
+                List<Suoritus> loytyneet = opintoloki.haeSuoritukset(kurssi);
+                for (Suoritus suoritus : loytyneet)
+                    suoritus.tulosta(System.out);
+            }
+
+        } catch (SailoException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+}

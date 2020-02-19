@@ -1,0 +1,186 @@
+package javaOpintoloki;
+
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.util.Random;
+
+import fi.jyu.mit.ohj2.Mjonot;
+import fxopintoloki.Tietue;
+
+
+/**
+ * Kurssin suoritus joka osaa mm. itse huolehtia Id:eest‰‰n
+ * @version 4.4.2019
+ * @author Olli Mehtonen & Justus Uurtimo
+ */
+public class Suoritus implements Cloneable, Tietue{
+
+	private int oid;
+	private int arvosana;
+	private String pvm;
+	
+	
+	/**
+     * Alustetaan suoritus
+     */
+	public Suoritus() {
+		// t‰m‰ on viel‰ tyhj‰
+	}
+	
+	
+	/**
+     * Alustetaan suoritus
+     * @param id suorituksen id
+     */
+	public Suoritus(int id) {
+		oid = id;
+	}
+	
+	public void setOid(int oid) {
+		this.oid = oid;
+	}
+	
+	public int getKenttia() {
+		return 3;
+	}
+	
+	public int ekaKentta() {
+		return 1;
+	}
+	
+	
+	public String getKysymys(int k) {
+        switch (k) {
+            case 0:
+                return "id";
+            case 1:
+                return "arvosana";
+            case 2:
+                return "p‰iv‰m‰‰r‰";
+            default:
+                return "???";
+        }
+    }
+	
+	  
+	  public String anna(int k) {
+	        switch (k) {
+	            case 0:
+	                return "" + this.oid;
+	            case 1:
+	                return "" + this.arvosana;
+	            case 2:
+	                return this.pvm;
+	            default:
+	                return "???";
+	                }
+	        }
+	    
+	  public String aseta(int k, String s) {
+	        String st = s.trim();
+	        StringBuffer sb = new StringBuffer(st);
+	        switch (k) {
+	            case 0:
+	                setOid(Mjonot.erota(sb, '$', getId()));
+	                return null;
+	            case 1:
+	                this.arvosana = Mjonot.erota(sb, '$', this.arvosana);
+	                return null;
+	            case 2:
+	                this.pvm = st;
+	                return null;
+
+	            default:
+	                return "V‰‰r‰ kent‰n indeksi";
+	        }
+	    }
+	
+	  
+	  public Suoritus clone() throws CloneNotSupportedException { 
+	        return (Suoritus)super.clone();
+	    }
+	  
+	/**
+     * Luodaan random suoritus
+     * @param id suorituksen id
+     */
+	public void annaVakio(int id) {
+		Random randomi = new Random();
+		
+		this.oid = id;
+		this.arvosana = randomi.nextInt(5);
+		this.pvm = "1.1.2019";
+	}
+	
+	
+	
+	/**
+     * Palautetaan suorituksen oma oid
+     * @return suorituksen oid
+     * @example
+     * <pre name="test">
+     *  Suoritus suoritus = new Suoritus(1, "2.2.2019", 3);
+	 *  suoritus.getId() === 1;
+     */
+	public int getId() {
+		return this.oid;
+	}
+	
+
+    /**
+     * Tulostetaan suorituksen tiedot
+     * @param os tietovirta johon tulostetaan
+     */	
+	public void tulosta(PrintStream out) {
+		out.println("Arvosana: " + arvosana);
+		out.println("Suoritus p‰iv‰m‰‰r‰: " + pvm + "\n");
+	}
+	
+
+    /**
+     * Tulostetaan suorituksen tiedot
+     * @param os tietovirta johon tulostetaan
+     */
+	public void tulosta(OutputStream os) {
+		tulosta(new PrintStream(os));
+	}
+	
+	@Override
+	public String toString() {
+		return "" + oid + "," + 
+					arvosana + "," +
+					pvm;
+	}
+	
+	public void parse(String rivi) {
+		StringBuffer sb = new StringBuffer(rivi);
+		setOid(Mjonot.erota(sb, ',', getId()));
+		arvosana = Mjonot.erota(sb, ',', arvosana);
+		pvm = Mjonot.erota(sb, ',', pvm);
+		
+	}
+	
+	  @Override
+	    public boolean equals(Object obj) {
+	        if ( obj == null ) return false;
+	        return this.toString().equals(obj.toString());
+	    }
+	    
+
+	    @Override
+	    public int hashCode() {
+	        return this.oid;
+	    }
+	
+
+
+	/**
+     * Testiohjelma Harrastukselle.
+     * @param args ei k‰ytˆss‰
+     */
+    public static void main(String[] args) {
+        Suoritus suoritus = new Suoritus(1);
+        suoritus.annaVakio(1);
+        suoritus.tulosta(System.out);
+    }
+}
